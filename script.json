@@ -1,0 +1,115 @@
+{
+    "version": "1.0.0",
+    "sections": {
+      "main": [
+        {
+          "answer": {}
+        },
+        {
+          "ai": {
+            "agent_meta_data": {
+              "agent_id": "52"
+            },
+            "post_prompt_url": "https://aiagent.signalwire.me/post?agent_id=52",
+            "params": {
+              "transfer_summary": "true",
+              "swaig_allow_swml": "true",
+              "swaig_post_swml_vars": "true",
+              "swaig_post_conversation": "https://aiagent.signalwire.me/post?agent_id=52",
+              "conversation_id": "",
+              "swaig_allow_settings": "true",
+              "verbose_logs": "true",
+              "save_conversation": "true"
+            },
+            "post_prompt_auth_password": "cIEyhsqfLOe6e7sI",
+            "prompt": {
+              "text": "#  Introduction \r\n\r\nYour name is Rebecca from Valencia College West Campus. You are helping people contact the college. Please answer politely and warmly. \r\n\r\n# Step 1 \r\n\r\nIntroduce yourself and immediately ask the user for their first and last name.\r\n  \r\n# Step 2 \r\n\r\nAsk the user for their VID (VID is an ID that the college uses to identify the students, it starts with a V and is followed by 8 digits always), if the VID does not start with A 'V' and/or does not have 8 digits following it, please ask the caller for the valid VID.\r\n\r\n# Step 3 \r\n\r\nAsk the user why they are calling, based on their response suggest one of the targets to transfer to. The possible options for targets are: advising, enrollment,faculty, international, financial, internship, seneff, and library. The selected target will be used as the target for the 'transfer' function. \r\n  "
+            },
+            "languages": [
+             {
+                "id": "10f368b1-57e4-4f9f-a991-24c99d52967d",
+                "code": "en-CA",
+                "voice": "elevenlabs.dorothy-ml",
+                "name": "English (Canada)"
+              }
+            ],
+            "SWAIG": {
+              "functions": [
+                {
+                  "data_map": {
+                    "expressions": [
+                      {
+                        "output": {
+                          "response": "Tell the user you are going to transfer the call. Do not change languages from the one you are currently using. Do not hangup.",
+                          "action": [
+                            {
+                              "SWML": {
+                                "version": "1.0.0",
+                                "sections": {
+                                  "main": [
+                                    {
+                                      "connect": {
+                                        "to": "${meta_data.table.${lc:args.target}}"
+                                      }
+                                    }
+                                  ]
+                                }
+                              },
+                              "transfer": "true"
+                            }
+                          ],
+                          "post_process": "true"
+                        },
+                        "pattern": "\\w+",
+                        "string": "${meta_data.table.${lc:args.target}}"
+                      },
+                      {
+                        "output": {
+                          "response": "I'm sorry, I was unable to transfer your call to ${input.args.target}."
+                        },
+                        "pattern": ".*",
+                        "string": "${args.target}"
+                      }
+                    ]
+                  },
+                  "argument": {
+                    "type": "object",
+                    "properties": {
+                      "target": {
+                        "description": "the target to transfer to",
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "function": "transfer",
+                  "meta_data": {
+                    "table":{
+                      "career": "+18336527860",
+                      "enrollment": "+18886939953",
+                      "library": "+18336527837",
+                      "advising": "+18556873482",
+                      "international": "+18884548005",
+                      "financial": "+18885756802",
+                      "faculty": "+18887258860",
+                      "business": "+18888791334",
+                      "seneff": "+18887675711"
+                    }
+                  },
+                  "purpose": "use to transfer to a target"
+                }
+              ],
+              "defaults": {
+                "web_hook_auth_password": "cIEyhsqfLOe6e7sI",
+                "web_hook_url": "https://aiagent.signalwire.me/swaig?agent_id=52",
+                "web_hook_auth_user": "w7zbJLXET5Xpi1rl"
+              }
+            },
+            "post_prompt_auth_user": "w7zbJLXET5Xpi1rl",
+            "post_prompt": {
+              "text": "Return a json object that includes the callers name, their phone number, VID, call summary, reason stated for call, todays date, Give a rating 1-10 on how satisfied the user is after the interaction using sentiment analysis. as separate variables and in a json as its formatted below.\r\n{'caller_name': 'John Doe',\r\n'phone_number':'+1234567890', 'VID': 'V12345678',\r\n'call_summary':'Requesting information about product pricing and availability',\r\n'reason for call':'I was just calling the tell the teacher I am sick',\r\n'department':'Advisor',\r\n'date': 02/22/2003',\r\n'sentiment':9}"
+            }
+          }
+        }
+      ]
+    }
+  }
